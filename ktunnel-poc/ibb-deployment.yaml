@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ktunnel-poc
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ktunnel-poc
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ktunnel-poc
+    spec:
+      containers:
+      - image: nginx
+        name: my-ibb-traefik
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 8080
+          name: http2
+          protocol: TCP
+      - image: ubuntu
+        name: ktunnel
+        command:
+          - "tail"
+          - "-f"
+          - "/dev/null"
+      restartPolicy: Always
