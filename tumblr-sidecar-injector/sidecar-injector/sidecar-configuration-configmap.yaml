@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-sidecar-injector
+  namespace: kube-system
+  labels:
+    k8s-app: k8s-sidecar-injector
+data:
+  ibb-sc: |
+    name: ibb-sidecar
+    containers:
+    - name: ibb-sidecar-nginx
+      image: nginx
