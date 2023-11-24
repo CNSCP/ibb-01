@@ -10,8 +10,7 @@ metadata:
   name: "k8s-sidecar-injector-prod"
   namespace: "kube-system"
   labels:
-    k8s-app: "k8s-sidecar-injector"
-    track: "prod"
+    app: "k8s-sidecar-injector"
 spec:
   replicas: 1
   strategy:
@@ -37,7 +36,8 @@ spec:
       containers:
       - name: "k8s-sidecar-injector"
         imagePullPolicy: Always
-        image: tumblr/k8s-sidecar-injector:latest
+        # image: tumblr/k8s-sidecar-injector:latest
+        image: mindovermiles262/sidecar-injector
         command: ["entrypoint.sh"]
         args: []
         ports:

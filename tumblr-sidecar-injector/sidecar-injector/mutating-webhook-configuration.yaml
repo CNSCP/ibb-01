@@ -4,7 +4,6 @@ metadata:
   name: "tumblr-sidecar-injector-webhook"
   labels:
     app: k8s-sidecar-injector
-    track: prod
 webhooks:
 - name: "injector.tumblr.com"
   failurePolicy: "Ignore" # we fail "open" if the webhook is down hard
