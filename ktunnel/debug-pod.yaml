@@ -6,8 +6,9 @@ spec:
   containers:
   - image: mindovermiles262/ktunnel:0.1.0
     command:
-      - sleep
-      - "3600"
+      - "tail"
+      - "-f"
+      - "/dev/null"
     imagePullPolicy: IfNotPresent
     name: debug
     volumeMounts:

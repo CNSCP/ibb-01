@@ -15,8 +15,9 @@ RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -
   && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 
 RUN apt-get update \
-  && apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
-
+  && apt-get install -y \
+    google-cloud-cli \
+    google-cloud-sdk-gke-gcloud-auth-plugin
 
 RUN wget https://github.com/omrikiei/ktunnel/releases/download/v1.6.1/ktunnel_1.6.1_Linux_x86_64.tar.gz \
   && tar -xf ktunnel_1.6.1_Linux_x86_64.tar.gz \
