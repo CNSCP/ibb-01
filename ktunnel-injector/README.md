@@ -33,7 +33,7 @@ sed -i '' \
 
 ```
 kubectl create secret generic \
-  k8s-sidecar-injector \
+  ibb-ktunnel-sidecar-injector \
   --namespace kube-system \
   --from-file=tls/ibb/01/sidecar-injector.crt \
   --from-file=tls/ibb/01/sidecar-injector.key
@@ -47,11 +47,22 @@ kubectl create secret generic \
 kubectl apply -f sidecar-injector
 ```
 
+Congrats! Your injector should now be working! You can try to annotate a pod and deploy it to see if it is working:
 
-
-TODO: Figure this out.
-
-Left off where applying a demo pod was not adding the sidecars. Tried with the upstream examples/kubernetes/configmaps & debug pod, but same reuslt --> no sidecar injecton
-
-Look into setting up service per the docs.
-
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: injector-debug
+  annotations:
+    injector.ktunnel.ibbproject.com/request: ibb-ktunnel
+spec:
+  containers:
+  - image: debian:jessie
+    command:
+      - sleep
+      - "3600"
+    imagePullPolicy: IfNotPresent
+    name: debian
+  restartPolicy: Never
+```

@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ktunnel-config
+  namespace: kube-system
+  labels:
+    com.ibbproject/app: ibb-ktunnel-sidecar-injector
+data:
+  ibb-ktunnel.conf: |
+    name: ibb-ktunnel
+    containers:
+    - name: sidecar-nginx
+      image: nginx
+      imagePullPolicy: IfNotPresent
+      ports:
+      - containerPort: 80
