@@ -6,11 +6,11 @@ metadata:
     injector.ktunnel.ibbproject.com/request: ibb-ktunnel
 spec:
   containers:
-  # - image: debian:jessie
-  #   command:
-  #     - sleep
-  #     - "3600"
-  - image: nginx
+  - image: ubuntu
+    command:
+      - sleep
+      - "3600"
     imagePullPolicy: IfNotPresent
-    name: debian
+    name: ubuntu
   restartPolicy: Never
+

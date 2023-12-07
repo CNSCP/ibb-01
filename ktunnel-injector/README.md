@@ -24,7 +24,7 @@ OR sed Directly into mutating-webhook-configuration.yaml
 CA_BUNDLE_B64="$(cat tls/ibb/01/ca.crt | base64 | tr -d '\n')"
 sed -i '' \
   -e "s/__CA_BUNDLE_BASE64__/$CA_BUNDLE_B64/g" \
-  sidecar-injector/mutating-webhook-configuration.yaml
+  kubernetes/mutating-webhook-configuration.yaml
 ```
 
 [!] NOTE: Due to the many variations of `sed`, you may or may not need the single quotes after the `-i` flag.
@@ -39,15 +39,15 @@ kubectl create secret generic \
   --from-file=tls/ibb/01/sidecar-injector.key
 ```
 
-[!] If this secret is named anything other than `k8s-sidecar-injector` you'll need to update the `imagePullSecrets` in the Sidecar Injector's Service Account
+[!] If this secret is named anything other than `ibb-ktunnel-sidecar-injector` you'll need to update the `imagePullSecrets` in the Sidecar Injector's Service Account
 
 4. Apply all the things
 
 ```
-kubectl apply -f sidecar-injector
+kubectl apply -f kubernetes/
 ```
 
-Congrats! Your injector should now be working! You can try to annotate a pod and deploy it to see if it is working:
+Congrats! Your injector should now be working! You can try to annotate a pod and deploy it to see if it is working. Because the pod is annotated with `injector.ktunnel.ibbproject.com/request` and the value (`ibb-ktunnel`) matches that of a config we set up in `kubernetes/configuration-configmap.yaml`, the injector-debug pod will be injected with an additional container.
 
 ```
 apiVersion: v1
@@ -58,11 +58,12 @@ metadata:
     injector.ktunnel.ibbproject.com/request: ibb-ktunnel
 spec:
   containers:
-  - image: debian:jessie
+  - image: ubuntu
     command:
       - sleep
       - "3600"
     imagePullPolicy: IfNotPresent
-    name: debian
+    name: ubuntu
   restartPolicy: Never
 ```
+
