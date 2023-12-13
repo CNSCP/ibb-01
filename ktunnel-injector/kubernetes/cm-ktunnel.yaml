@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ktunnel-config
+  namespace: kube-system
+  labels:
+    com.ibbproject/app: ibb-ktunnel-sidecar-injector
+data:
+  ibb-ktunnel.conf: |
+    name: ibb-ktunnel
+    containers:
+    - name: ktunnel
+      image: mindovermiles262/ktunnel:v1.0.1
+			volumeMounts:
+				- mountPath: /root/.kube/
+					name: kubeconfig
+					readOnly: true
+				- mountPath: /etc/podinfo
+					name: podinfo
+
