@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  labels:
+    org.edgexfoundry.service: edgex-ui
+  name: edgex-ui
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      org.edgexfoundry.service: edgex-ui
+  template:
+    metadata:
+      labels:
+        org.edgexfoundry.service: edgex-ui
+        injector.ktunnel.ibbproject.com/id: "abc123"
+        injector.ktunnel.ibbproject.com/port: "4000"
+    spec:
+      # serviceAccountName: ktunnel-sidecar
+      containers:
+      # Add a sidecar
+      # Will be replaced with sidecar injector
+      - image: mindovermiles262/ktunnel:v1.0.1
+        command:
+          - "tail"
+          - "-f"
+          - "/dev/null"
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+        name: ktunnel
+        volumeMounts:
+          - mountPath: /root/.kube/
+            name: kubeconfig
+            readOnly: true
+          - mountPath: /etc/podinfo
+            name: podinfo
+      # END: Add a sidecar
+      - env:
+        - name: EDGEX_SECURITY_SECRET_STORE
+          value: "false"
+        - name: SERVICE_SERVERBINDADDR
+          value: 0.0.0.0
+        image: edgexfoundry/edgex-ui:3.0.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/v3/ping
+            port: 4000
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: edgex-ui
+        ports:
+        - containerPort: 4000
+          name: http
+          protocol: TCP
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+        startupProbe:
+          failureThreshold: 120
+          httpGet:
+            path: /api/v3/ping
+            port: 4000
+            scheme: HTTP
+          periodSeconds: 1
+          successThreshold: 1
+          timeoutSeconds: 1
+      hostname: edgex-ui
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        runAsGroup: 2001
+        runAsUser: 2002
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: kubeconfig
+          secret:
+            secretName: kubeconfig
+        - name: podinfo
+          downwardAPI:
+            items:
+            - path: "labels"
+              fieldRef:
+                fieldPath: metadata.labels
+            - path: "annotations"
+              fieldRef:
+                fieldPath: metadata.annotations
