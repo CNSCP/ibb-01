@@ -8,15 +8,28 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: injector-debug
+  labels:
+    injector.ktunnel.ibbproject.com/id: "CHANGEME"
+    injector.ktunnel.ibbproject.com/port: "80"
   annotations:
     injector.ktunnel.ibbproject.com/request: ibb-ktunnel
 spec:
   containers:
-  - image: ubuntu
-    command:
-      - sleep
-      - "3600"
+  - image: nginx
+    name: nginx
     imagePullPolicy: IfNotPresent
-    name: ubuntu
   restartPolicy: Never
+  volumes:
+    - name: kubeconfig
+      secret:
+        secretName: kubeconfig
+    - name: podinfo
+      downwardAPI:
+        items:
+        - path: "labels"
+          fieldRef:
+            fieldPath: metadata.labels
+        - path: "annotations"
+          fieldRef:
+            fieldPath: metadata.annotations
 
