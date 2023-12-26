@@ -1,3 +1,9 @@
+#
+# This is a debug pod. It is used to test whether or not you have properly
+# configured the sidecar injector. When you `kubectl apply -f debug-pod.yaml`,
+# you should see 2 containers if the sidecar injector is properly working.
+#
+---
 apiVersion: v1
 kind: Pod
 metadata:

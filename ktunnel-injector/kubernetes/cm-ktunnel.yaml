@@ -11,7 +11,7 @@ data:
     name: ibb-ktunnel
     containers:
     - name: ktunnel
-      image: mindovermiles262/ktunnel:v1.0.1
+      image: us-central1-docker.pkg.dev/padi-staging/public/ibb-ktunnel:latest
 			volumeMounts:
 				- mountPath: /root/.kube/
 					name: kubeconfig
