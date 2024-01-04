@@ -9,13 +9,13 @@ kind: Pod
 metadata:
   name: injector-debug
   labels:
-    injector.ktunnel.ibbproject.com/id: "CHANGEME"
-    injector.ktunnel.ibbproject.com/port: "80"
+    injector.ktunnel.ibbproject.com/id: "aduss-03"
+    injector.ktunnel.ibbproject.com/port: "8080"
   annotations:
     injector.ktunnel.ibbproject.com/request: ibb-ktunnel
 spec:
   containers:
-  - image: nginx
+  - image: us-central1-docker.pkg.dev/padi-staging/public/nginx-8080:v1.1.0
     name: nginx
     imagePullPolicy: IfNotPresent
   restartPolicy: Never
